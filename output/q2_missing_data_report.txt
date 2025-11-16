@@ -23,29 +23,29 @@ That said, linear interpolation assumes that trends change constantly or follow 
 
 - Include examples showing missing data patterns
 We can look at the first 10 days in January 2023:
-            Original     Linear       Time
-date                                      
-2023-01-31    98.777  98.777000  98.777000
-2023-02-01       NaN  98.785011  98.785011
-2023-02-02       NaN  98.793021  98.793021
-2023-02-03       NaN  98.801031  98.801031
-2023-02-04       NaN  98.809041  98.809041
-2023-02-05       NaN  98.817052  98.817052
-2023-02-06       NaN  98.825062  98.825062
-2023-02-07       NaN  98.833072  98.833072
-2023-02-08       NaN  98.841082  98.841082
-2023-02-09       NaN  98.849092  98.849092
+            Original  Forward_Fill  Backward_Fill     Linear       Time
+date                                                                   
+2023-01-31    98.777        98.777      98.777000  98.777000  98.777000
+2023-02-01       NaN        98.777      99.001287  98.785011  98.785011
+2023-02-02       NaN        98.777      99.001287  98.793021  98.793021
+2023-02-03       NaN        98.777      99.001287  98.801031  98.801031
+2023-02-04       NaN        98.777      99.001287  98.809041  98.809041
+2023-02-05       NaN        98.777      99.001287  98.817052  98.817052
+2023-02-06       NaN        98.777      99.001287  98.825062  98.825062
+2023-02-07       NaN        98.777      99.001287  98.833072  98.833072
+2023-02-08       NaN        98.777      99.001287  98.841082  98.841082
+2023-02-09       NaN        98.777      99.001287  98.849092  98.849092
 
 We can see that: 
-* Forward fill keeps the first observed value (98.62˚F) until a new value is input
-* Backward fill uses the next observed value (98.60˚F) for all previous days
+* Forward fill keeps the first observed value (98.78˚F) until a new value is input
+* Backward fill uses the next observed value (99.00˚F) for all previous days
 * Linear interpolation imputes gradual transitions of measurements between known points
 
-For example on January 5, 2023:
+For example on February 5, 2023:
 * Original: NaN (missing)
-* Forward Fill: 98.62°F (copies from previous month-end)
-* Backward Fill: 98.60°F (copies from next month-end)
-* Linear Interpolation: 98.61°F (halfway between endpoints)
+* Forward Fill: 98.78°F (copies from previous month-end)
+* Backward Fill: 99.00°F (copies from next month-end)
+* Linear Interpolation: 98.82°F (halfway between endpoints)
 
 
 
