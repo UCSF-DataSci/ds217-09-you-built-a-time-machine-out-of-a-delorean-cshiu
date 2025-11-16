@@ -1,0 +1,78 @@
+
+Missing Data Handling Report
+
+TODO: Document your missing data handling:
+- How many missing values did you find?
+We can see from the dataset:
+Total Observations: 335 days
+Missing Values: 323 observations
+
+- What percentage of data was missing?
+Missing percentage: 96.4%
+
+- Which method did you use to fill missing values?
+I used linear interpolation as the method to fill missing values.
+ts_interpolated_linear = ts_with_missing.interpolate(method='linear')
+
+- Why did you choose that method?
+The linear interpolation method draws a straight line between consecutive known data points, which is a good strategy to estimate missing values that lie between the two timepoints. It is highly likely that missing data will fall at or around this line of best fit if the data follows a predictable trend. 
+
+- What are the pros/cons of your approach?
+Linear interpolation is a good strategy to esimate this missing data, since we upsampled monthly observations to daily. This provides regular, intervalled timepoints between which we need to estimate values. We are looking at changes in patient vitals, which change gradually, steadily, and relatively predictably over time. Linear interpolation is a good fit, since we don't expect extreme outliers to happen in between timepoints. This strategy also will cleanly display trends over time. Other strategies like forward or backward fill may mask changes between timepoints since they assume the data is the same as the previous or next timepoint value. 
+That said, linear interpolation assumes that trends change constantly or follow a relatively linear pattern. There may be large fluctuations in the data that this model will not capture. Also, if the endpooints of the time analyses are chosen poorly (i.e. a starting period of stability and an ending point of stability), if an unexpected change happens between the selected timepoints, it will not be captured in the model. 
+
+- Include examples showing missing data patterns
+We can look at the first 10 days in January 2023:
+            Original     Linear       Time
+date                                      
+2023-01-31    98.777  98.777000  98.777000
+2023-02-01       NaN  98.785011  98.785011
+2023-02-02       NaN  98.793021  98.793021
+2023-02-03       NaN  98.801031  98.801031
+2023-02-04       NaN  98.809041  98.809041
+2023-02-05       NaN  98.817052  98.817052
+2023-02-06       NaN  98.825062  98.825062
+2023-02-07       NaN  98.833072  98.833072
+2023-02-08       NaN  98.841082  98.841082
+2023-02-09       NaN  98.849092  98.849092
+
+We can see that: 
+* Forward fill keeps the first observed value (98.62˚F) until a new value is input
+* Backward fill uses the next observed value (98.60˚F) for all previous days
+* Linear interpolation imputes gradual transitions of measurements between known points
+
+For example on January 5, 2023:
+* Original: NaN (missing)
+* Forward Fill: 98.62°F (copies from previous month-end)
+* Backward Fill: 98.60°F (copies from next month-end)
+* Linear Interpolation: 98.61°F (halfway between endpoints)
+
+
+
+Missing patterns:
+Missing by month:
+date
+1      0
+2     27
+3     30
+4     29
+5     30
+6     29
+7     30
+8     30
+9     29
+10    30
+11    29
+12    30
+Name: temperature, dtype: int64
+
+Missing by day of week:
+date
+0    46
+1    45
+2    47
+3    46
+4    46
+5    47
+6    46
+Name: temperature, dtype: int64
