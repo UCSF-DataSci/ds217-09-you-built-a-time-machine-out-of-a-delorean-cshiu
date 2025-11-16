@@ -1,0 +1,27 @@
+
+Comprehensive Timezone Operations Report
+
+1. ORIGINAL TIMEZONE
+The original patient vitals data contained datetime values with no associated timezone information. 
+
+2. LOCALIZATION
+I localized the datetime data to UTC (Coordinated Universal Time) using tz_localize(), since UTC is the universal reference point for timezone conversions and does not change with daylight saving time. Localizing to UTC is the best practice of storing date data. 
+The syntax to complete this was: 
+patient_vitals_tz['date'] = patient_vitals_tz['date'].dt.tz_localize('UTC')
+This assigns a timezone to each timestamp datapoint and maintains the original input date and time information
+
+3. CONVERSION
+I converted the data to US/Eastern time (from UTC) for sites in East Coast locations. Converting the dates to a different timezone preserves the absolute time, but adjusts the displayed time. This is beneficial in that we can interpret data in a local context and make sure that dates and times are consistent across sites in multiple locations.
+
+4. DST
+Thankfully, converting to UTC avoids DST ambiguity. DST creates confusion particularly during DST transition periods: in Spring, clocks move forward one hour, effectively eliminating an hour of recorded time. In Fall, clocks move back one our, creating an hour that occurs twice. These two annual events can create potential data loss or potential data duplication. UTC never changes for DST and thus, it is a stable reference. 
+
+5. Example:
+
+Original (naive):      2023-01-15 10:00:00
+After localization:    2023-01-15 10:00:00+00:00 (UTC)
+Converted to Eastern:  2023-01-15 05:00:00-05:00 (EST, UTC-5)
+
+An example date with DST in summer:
+UTC timestamp:         2023-07-15 14:00:00+00:00
+US/Eastern:           2023-07-15 10:00:00-04:00 (EDT, UTC-4)
